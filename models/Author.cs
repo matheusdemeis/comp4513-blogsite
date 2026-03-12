@@ -13,4 +13,6 @@ public class Author
     public int AuthorId {get; set;}
 
     public Author AuthorId {get; set;}
+
+    public DbSet<Author> Authors {get; set;}
 }
