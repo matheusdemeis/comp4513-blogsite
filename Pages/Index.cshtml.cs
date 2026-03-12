@@ -20,6 +20,7 @@ public class IndexModel : PageModel
     public async Task OnGet()
     {
         Posts = await _context.Posts
+        .Include(p => p.Author)
         .ToListAsync();
     }
 }
