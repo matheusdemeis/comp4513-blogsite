@@ -24,6 +24,12 @@ public static class DbInitializer
 
         List<Author> authors = authorFaker.Generate(3);
 
+        List<Category> categories = new()
+        {
+            new Category {Id = 1, Name = "Design"},
+            new Category {Id = 2, Name = "Web Dev"}
+        };
+
         var postId = 1;
 
         var postFaker = new Faker<Post>().Rules((f, p) =>
@@ -32,6 +38,7 @@ public static class DbInitializer
             p.Title = f.Lorem.Sentence();
             p.Content = f.Lorem.Paragraphs(5);
             p.Author = f.PickRandom(authors);
+            p.Category = f.PickRandom(categories);
         });
 
         List<Post> posts = postFaker.Generate(5);
