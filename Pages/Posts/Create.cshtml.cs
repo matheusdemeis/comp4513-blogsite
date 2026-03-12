@@ -43,10 +43,20 @@ namespace comp4513_blogsite.Pages.Posts
                 return Page();
             }
 
+            var newPost = new Post();
+
+            if (await TryUpdateModelAsync<Post>(
+                newPost,
+                "post", //prefix
+                p => p.Title, p => p.Content,
+                p => p.AuthorId, p => p.Category.Id
+            ))
+            {
             _context.Posts.Add(Post);
             await _context.SaveChangesAsync();
-
             return RedirectToPage("./Index");
+            }
+            return Page();
         }
     }
 }
