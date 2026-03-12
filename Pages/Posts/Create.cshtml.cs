@@ -12,20 +12,28 @@ namespace comp4513_blogsite.Pages.Posts
 {
     public class CreateModel : PageModel
     {
-        private readonly comp4513_blogsite.Data.BlogContext _context;
+        private readonly BlogContext _context;
 
-        public CreateModel(comp4513_blogsite.Data.BlogContext context)
+        public CreateModel(BlogContext context)
         {
             _context = context;
         }
 
-        public IActionResult OnGet()
-        {
-            return Page();
-        }
+        
 
         [BindProperty]
         public Post Post { get; set; } = default!;
+
+        public SelectList AuthorOptions { get; set; }
+
+        public SelectList CategoryOptions { get; set; }
+
+        public IActionResult OnGet()
+        {
+            AuthorOptions = new SelectList(_context.Authors, "Id", "Name");
+            CategoryOptions = new SelectList (_context.Categories, nameof(Category.Id), nameof(Category.Name));
+            return Page();
+        }
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
