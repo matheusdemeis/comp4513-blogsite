@@ -18,8 +18,9 @@
     @foreach (var post in Model.Posts)
     {
         <div class="card mb-3">
-            <h6 class="card-title">@post.Title</h6>
-            <p class="card-text">@post.Excerpt</p>
+            <h3 class="card-title">@post.Title</h3>
+            <span class="text-sm text-muted">by @post.Author.Name</span>
+            <p class="card-text mt-3">@post.Excerpt</p>
             <a asp-page="/Posts/Details" asp-route-id="@post.Id">Read More</a>
         </div>
     }

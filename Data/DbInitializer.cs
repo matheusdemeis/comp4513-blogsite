@@ -31,7 +31,7 @@ public static class DbInitializer
             p.Id = postId++;
             p.Title = f.Lorem.Sentence();
             p.Content = f.Lorem.Paragraphs(5);
-            p.Author = f.pickRandom(authors);
+            p.Author = f.PickRandom(authors);
         });
 
         List<Post> posts = postFaker.Generate(5);

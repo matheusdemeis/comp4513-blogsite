@@ -23,7 +23,9 @@ namespace comp4513_blogsite.Pages.Posts
 
         public async Task OnGetAsync()
         {
-            Post = await _context.Posts.ToListAsync();
+            Post = await _context.Posts
+            .Include(p => p.Author)
+            .ToListAsync();
         }
     }
 }
