@@ -30,7 +30,7 @@ namespace comp4513_blogsite.Pages.Posts
                 return NotFound();
             }
 
-            var post =  await _context.Posts.FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _context.Posts.FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
                 return NotFound();
@@ -41,6 +41,7 @@ namespace comp4513_blogsite.Pages.Posts
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more information, see https://aka.ms/RazorPagesCRUD.
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -48,26 +49,21 @@ namespace comp4513_blogsite.Pages.Posts
                 return Page();
             }
 
-            _context.Attach(Post).State = EntityState.Modified;
+            var postToUpdate = await _context.Posts.FindAsync(Post.Id);
 
-            try
+            if (postToUpdate == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PostExists(Post.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
-            return RedirectToPage("./Index");
+            postToUpdate.Title = Post.Title;
+            postToUpdate.Content = Post.Content;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("./Details", new { id = Post.Id });
         }
+
 
         private bool PostExists(int id)
         {
