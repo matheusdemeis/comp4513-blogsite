@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-
 using comp4513_blogsite.Data;
 using comp4513_blogsite.Models;
 
@@ -17,11 +15,17 @@ public class IndexModel : PageModel
     }
 
     public List<Post> Posts { get; set; } = new();
-    public async Task OnGet()
+    public List<Category> Categories { get; set; } = new();
+
+    public async Task OnGetAsync()
     {
         Posts = await _context.Posts
-        .Include(p => p.Author)
-        .Include(p => p.Category)
-        .ToListAsync();
+            .Include(p => p.Author)
+            .Include(p => p.Category)
+            .ToListAsync();
+
+        Categories = await _context.Categories
+            .Include(c => c.Posts)
+            .ToListAsync();
     }
 }

@@ -4,35 +4,46 @@
     ViewData["Title"] = "Home page";
 }
 
-<h1 class="text-center">My Posts</h1>
+<h1 class="text-center mb-4">My blog posts</h1>
 
 <div class="row">
     <div class="col-md-2 d-flex flex-column gap-3">
-        <a asp-page="/Posts/Create" class="btn btn-primary btn-sm">New Post</a>
-        <a asp-page="/Authors/Create" class="btn btn-primary btn-sm">New Author</a>
-        <a asp-page="/Categories/Create" class="btn btn-primary btn-sm">New Category</a>
+        <a asp-page="/Posts/Create" class="btn btn-primary btn-sm">New post</a>
+        <a asp-page="/Authors/Create" class="btn btn-primary btn-sm">New author</a>
+        <a asp-page="/Categories/Create" class="btn btn-primary btn-sm">New category</a>
     </div>
 
-
-   <div class="col-md-7">
-    @foreach (var post in Model.Posts)
-    {
-        <div class="card mb-4 p-3">
-            <h3 class="card-title">@post.Title</h3>
-            <span class="text-sm text-muted">by @post.Author.Name</span>
-            <span class="text -muted">in 
-                <a asp-page="/Categories/Details" asp-route-id=@post.Category.Id>
-                @post.Category.Name
-                </a>
-            </span>
-            <p class="card-text mt-3">@post.Excerpt</p>
-            <a asp-page="/Posts/Details" asp-route-id="@post.Id">Read More</a>
-        </div>
-    }
-     </div>
-
+    <div class="col-md-7">
+        @foreach (var post in Model.Posts)
+        {
+            <div class="card mb-4 p-3">
+                <h3 class="card-title">@post.Title</h3>
+                <p class="text-muted mb-2">
+                    by @post.Author?.Name in
+                    <a asp-page="/Categories/Details" asp-route-id="@post.CategoryId">@post.Category?.Name</a>
+                </p>
+                <p class="card-text">@post.Excerpt</p>
+                <a asp-page="/Posts/Details" asp-route-id="@post.Id">Read more</a>
+            </div>
+        }
+    </div>
 
     <div class="col-md-3">
-        <h3>Categories</h3>
+        <h2 class="text-center">Categories</h2>
+
+        @foreach (var category in Model.Categories)
+        {
+            <div class="mb-4">
+                <h5>@category.Name</h5>
+                <ul>
+                    @foreach (var post in category.Posts)
+                    {
+                        <li>
+                            <a asp-page="/Posts/Details" asp-route-id="@post.Id">@post.Title</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
     </div>
 </div>

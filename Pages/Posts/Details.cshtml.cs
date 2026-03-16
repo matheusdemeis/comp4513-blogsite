@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +8,15 @@ namespace comp4513_blogsite.Pages.Posts
 {
     public class DetailsModel : PageModel
     {
-        private readonly comp4513_blogsite.Data.BlogContext _context;
+        private readonly BlogContext _context;
 
-        public DetailsModel(comp4513_blogsite.Data.BlogContext context)
+        public DetailsModel(BlogContext context)
         {
             _context = context;
         }
 
         public Post Post { get; set; } = default!;
+        public List<Post> RelatedPosts { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -28,16 +25,23 @@ namespace comp4513_blogsite.Pages.Posts
                 return NotFound();
             }
 
-            var post = await _context.Posts.FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _context.Posts
+                .Include(p => p.Category)
+                .Include(p => p.Author)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (post is not null)
+            if (post == null)
             {
-                Post = post;
-
-                return Page();
+                return NotFound();
             }
 
-            return NotFound();
+            Post = post;
+
+            RelatedPosts = await _context.Posts
+                .Where(p => p.CategoryId == Post.CategoryId && p.Id != Post.Id)
+                .ToListAsync();
+
+            return Page();
         }
     }
 }
